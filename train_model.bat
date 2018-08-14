@@ -1,2 +1,2 @@
-opencv_traincascade -data data -vec positives.vec -numPos 200 -numNeg 200 -bg bg.txt -numStages 10
+opencv_traincascade -data data -vec positives.vec -numPos 2000 -numNeg 1000 -bg bg.txt -numStages 20
 pause

@@ -1,2 +1,2 @@
-opencv_createsamples -vec "positives" -info "info.dat" -num 200
+opencv_createsamples -vec "positives.vec" -info "info.dat" -num 2000
 pause
