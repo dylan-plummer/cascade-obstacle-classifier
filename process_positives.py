@@ -1,6 +1,10 @@
 import os
 import bpy
 import numpy as np
+from mathutils import Euler
+from mathutils import Vector
+import random
+import math
 import cv2
 
 print(os.path.dirname(os.path.realpath(__file__)))
@@ -12,23 +16,10 @@ directory = os.fsencode(frames_dir)
 
 def save_depth_frame(scene):
     global frame_i
-    # get viewer pixels
-    pixels = bpy.data.images['Viewer Node'].pixels
-    # size is always width * height * 4 (rgba)
-    pixels = np.array(pixels)[::4]
-    print (pixels.shape)
-
-    ix = scene.render.resolution_x
-    iy = scene.render.resolution_y
-    #depth = np.reshape(pixels, (iy,ix))
-    #depth = np.flipud(depth)
-
+    randomize_camera()
     try:
-        #np.save('C:\\Users\\jumpr_000\\Desktop\\Desktop\\Machine Learning\\Obstacle Detection\\test_data\\npy\\' + str(frame_i) + '.npy', depth)
-        #cv2.imwrite('img/' + str(frame_i) + '.png', depth)
         img_name = "%04d" % (frame_i,) + '.png'
         img_path = 'C:/Users/jumpr_000/Desktop/cascade-obstacle-classifier/img/labels/' + img_name
-        print(img_path)
         img = cv2.imread(img_path)
         print(img.shape)
         imgray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
@@ -53,5 +44,16 @@ def save_depth_frame(scene):
         print(type(inst))    # the exception instance
         print(inst.args)     # arguments stored in .args
         print(inst)          # __str__ allows args to be printed directly
+
+def randomize_camera():
+    x_loc = random.uniform(-49,49)
+    y_loc = random.uniform(-49,49)
+    z_loc = random.uniform(0.5,3)
+    x_rot = random.uniform(30,90) / 180 * math.pi
+    y_rot = 0
+    z_rot = random.uniform(0,360) / 180 * math.pi
+    cam = bpy.data.objects['Camera']
+    cam.rotation_euler = Euler((x_rot, y_rot, z_rot), 'XYZ')
+    cam.location = Vector((x_loc, y_loc, z_loc))
 
 bpy.app.handlers.frame_change_post.append(save_depth_frame)
